@@ -2,7 +2,7 @@
 
 ## Ссылки / Links
 
-- [GitHub Repository](https://github.com/Triganus/mesto-project-ff)
+- GitHub Repository: https://github.com/Triganus/mesto-project-ff
 - [GitHub Pages](https://triganus.github.io/mesto-project-ff/)
 
 ## Описание проекта / Project Description
