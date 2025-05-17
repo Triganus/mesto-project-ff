@@ -1,3 +1,18 @@
+import './pages/index.css';
+import { initialCards } from './cards.js';
+
+console.log('Hello, World!');
+
+import logo from './images/logo.svg';
+console.log('Путь к логотипу после сборки:', logo);
+
+const numbers = [2, 3, 5];
+
+// Стрелочная функция. Не запнётся ли на ней Internet Explorer?
+const doubledNumbers = numbers.map(number => number * 2);
+
+console.log(doubledNumbers); // 4, 6, 10
+
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
