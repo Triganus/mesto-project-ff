@@ -1,9 +1,10 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
+import logo from './images/logo.svg';
+import avatar from './images/avatar.jpg';
 
 console.log('Hello, World!');
 
-import logo from './images/logo.svg';
 console.log('Путь к логотипу после сборки:', logo);
 
 const numbers = [2, 3, 5];
@@ -50,3 +51,7 @@ initialCards.forEach(cardData => {
   const cardElement = createCard(cardData, deleteCard);
   placesList.append(cardElement);
 });
+
+// Установка изображений
+document.querySelector('[data-logo]').src = logo;
+document.querySelector('[data-avatar]').style.backgroundImage = `url(${avatar})`;
