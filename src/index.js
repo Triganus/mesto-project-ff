@@ -13,15 +13,9 @@ const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
 // Попапы
-const popups = document.querySelectorAll('.popup');
 const editProfilePopup = document.querySelector('.popup_type_edit');
 const addCardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
-
-// Добавляем класс анимации ко всем попапам
-popups.forEach((popup) => {
-  popup.classList.add('popup_is-animated');
-});
 
 // Формы и поля
 const editProfileForm = editProfilePopup.querySelector('.popup__form');
@@ -53,17 +47,6 @@ function addCard(cardData) {
     handleCardClick
   );
   placesList.prepend(cardElement);
-}
-
-// Функция добавления начальных карточек на страницу
-function addInitialCard(cardData) {
-  const cardElement = createCard(
-    cardData,
-    handleDeleteCard,
-    handleLikeCard,
-    handleCardClick
-  );
-  placesList.append(cardElement);
 }
 
 // Обработчик отправки формы редактирования профиля
@@ -111,7 +94,7 @@ setEventListeners(imagePopup);
 
 // Инициализация карточек
 initialCards.forEach((cardData) => {
-  addInitialCard(cardData);
+  addCard(cardData);
 });
 
 // Установка изображений
