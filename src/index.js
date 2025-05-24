@@ -2,8 +2,19 @@ import './pages/index.css';
 import { initialCards } from './cards.js';
 import { createCard, handleDeleteCard, handleLikeCard } from './components/card.js';
 import { openModal, closeModal, setEventListeners } from './components/modal.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 import logo from './images/logo.svg';
 import avatar from './images/avatar.jpg';
+
+// Конфигурация валидации
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 // DOM элементы
 const placesList = document.querySelector('.places__list');
@@ -66,6 +77,7 @@ function handleAddCardFormSubmit(evt) {
   };
   addCard(newCard);
   evt.target.reset();
+  clearValidation(addCardForm, validationConfig, true);
   closeModal(addCardPopup);
 }
 
@@ -73,6 +85,7 @@ function handleAddCardFormSubmit(evt) {
 function handleEditProfileClick() {
   nameInput.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
+  clearValidation(editProfileForm, validationConfig);
   openModal(editProfilePopup);
 }
 
@@ -91,6 +104,9 @@ addCardForm.addEventListener('submit', handleAddCardFormSubmit);
 setEventListeners(editProfilePopup);
 setEventListeners(addCardPopup);
 setEventListeners(imagePopup);
+
+// Включение валидации
+enableValidation(validationConfig);
 
 // Инициализация карточек
 initialCards.forEach((cardData) => {
