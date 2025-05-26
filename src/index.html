@@ -15,7 +15,9 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" data-avatar></div>
+      <div class="profile__image" data-avatar>
+        <button class="profile__avatar-button" type="button"></button>
+      </div>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -98,6 +100,31 @@
       <p class="popup__caption"></p>
     </div>
   </div>
+  <div class="popup popup_type_avatar">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="avatar" novalidate>
+        <input type="url" 
+               name="avatar" 
+               id="avatar-url"
+               class="popup__input popup__input_type_avatar" 
+               placeholder="Ссылка на картинку" 
+               required>
+        <span class="avatar-url-error popup__error"></span>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
+  <div class="popup popup_type_delete">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Вы уверены?</h3>
+      <form class="popup__form" name="delete-card" novalidate>
+        <button type="submit" class="button popup__button">Да</button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <template id="card-template">
@@ -107,7 +134,10 @@
     <div class="card__description">
       <h2 class="card__title">
       </h2>
-      <button type="button" class="card__like-button"></button>
+      <div class="card__like-section">
+        <button type="button" class="card__like-button"></button>
+        <span class="card__like-count">0</span>
+      </div>
     </div>
   </li>
 </template>
