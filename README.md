@@ -9,8 +9,6 @@
 
 Mesto - это интерактивная веб-страница, где пользователи могут делиться фотографиями, ставить лайки и редактировать свой профиль. Проект представляет собой одностраничное приложение (SPA) с адаптивным дизайном и полной интеграцией с сервером API.
 
-Mesto is an interactive web page where users can share photos, like posts, and edit their profile. The project is a single-page application (SPA) with responsive design and full API server integration.
-
 ## Технологии / Technologies
 
 - HTML5
@@ -36,13 +34,6 @@ Mesto is an interactive web page where users can share photos, like posts, and e
 - ✅ Модальные окна / Modal windows
 - ✅ UX улучшения (индикация загрузки) / UX improvements (loading indicators)
 - ✅ Попап подтверждения удаления / Delete confirmation popup
-
-## API Интеграция / API Integration
-
-Проект интегрирован с сервером Mesto API:
-- **Базовый URL**: `https://nomoreparties.co/v1/wff-cohort-40`
-- **Аутентификация**: Bearer токен в заголовке `authorization`
-- **Формат данных**: JSON
 
 ### Эндпоинты / Endpoints:
 - `GET /users/me` - получение информации о пользователе
