@@ -1,5 +1,24 @@
+import { likeCard, unlikeCard } from './api.js';
+
+// Обработчик лайка карточки
+function handleLikeClick(cardId, likeButton, likeCount) {
+  const isLiked = likeButton.classList.contains('card__like-button_active');
+  const likeMethod = isLiked ? unlikeCard : likeCard;
+  
+  likeMethod(cardId)
+    .then((updatedCard) => {
+      likeButton.classList.toggle('card__like-button_active');
+      if (likeCount) {
+        likeCount.textContent = updatedCard.likes.length;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 // Функция создания карточки
-function createCard(cardData, currentUserId, handleDeleteCard, handleLikeCard, handleCardClick) {
+function createCard(cardData, currentUserId, handleDeleteCard, handleCardClick) {
   // Клонируем шаблон
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
@@ -35,8 +54,7 @@ function createCard(cardData, currentUserId, handleDeleteCard, handleLikeCard, h
   // Добавляем обработчики
   deleteButton.addEventListener('click', () => handleDeleteCard(cardElement, cardData._id));
   likeButton.addEventListener('click', () => {
-    const currentIsLiked = likeButton.classList.contains('card__like-button_active');
-    handleLikeCard(cardData._id, likeButton, likeCount, currentIsLiked);
+    handleLikeClick(cardData._id, likeButton, likeCount);
   });
   cardImage.addEventListener('click', () => handleCardClick(cardData));
 
@@ -48,4 +66,4 @@ function handleDeleteCard(cardElement, cardId) {
   cardElement.remove();
 }
 
-export { createCard, handleDeleteCard }; 
+export { createCard, handleDeleteCard, handleLikeClick }; 

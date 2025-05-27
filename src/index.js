@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { createCard, handleDeleteCard } from './components/card.js';
+import { createCard, handleDeleteCard, handleLikeClick } from './components/card.js';
 import { openModal, closeModal, setEventListeners } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
 import { 
@@ -8,8 +8,6 @@ import {
   updateUserInfo, 
   addNewCard, 
   deleteCard, 
-  likeCard, 
-  unlikeCard, 
   updateAvatar 
 } from './components/api.js';
 import logo from './images/logo.svg';
@@ -85,7 +83,6 @@ function addCard(cardData, prepend = false) {
     cardData,
     currentUser._id,
     handleDeleteCardClick,
-    handleLikeCard,
     handleCardClick
   );
   
@@ -102,21 +99,7 @@ function handleDeleteCardClick(cardElement, cardId) {
   openModal(deletePopup);
 }
 
-// Обработчик лайка карточки
-function handleLikeCard(cardId, likeButton, likeCount, isLiked) {
-  const likeMethod = isLiked ? unlikeCard : likeCard;
-  
-  likeMethod(cardId)
-    .then((updatedCard) => {
-      likeButton.classList.toggle('card__like-button_active');
-      if (likeCount) {
-        likeCount.textContent = updatedCard.likes.length;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
+
 
 // Обработчик отправки формы редактирования профиля
 function handleProfileFormSubmit(evt) {
@@ -132,7 +115,7 @@ function handleProfileFormSubmit(evt) {
       closeModal(editProfilePopup);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
       renderLoading(submitButton, false);
@@ -154,7 +137,7 @@ function handleAddCardFormSubmit(evt) {
       closeModal(addCardPopup);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
       renderLoading(submitButton, false);
@@ -176,7 +159,7 @@ function handleAvatarFormSubmit(evt) {
       closeModal(avatarPopup);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
       renderLoading(submitButton, false);
@@ -197,7 +180,7 @@ function handleDeleteFormSubmit(evt) {
       cardToDelete = null;
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
       renderLoading(submitButton, false, 'Удаление...', 'Да');
@@ -257,7 +240,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     });
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 // Установка изображений
