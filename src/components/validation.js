@@ -1,3 +1,5 @@
+import { debounce } from './debounce.js';
+
 // Показать ошибку валидации
 function showInputError(formElement, inputElement, errorMessage, validationConfig) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -56,10 +58,29 @@ function setEventListeners(formElement, validationConfig) {
   // Проверим начальное состояние кнопки
   toggleButtonState(inputList, buttonElement, validationConfig);
 
+  // Создаем дебаунсированную функцию валидации
+  const debouncedValidation = debounce((inputElement) => {
+    checkInputValidity(formElement, inputElement, validationConfig);
+    toggleButtonState(inputList, buttonElement, validationConfig);
+  }, 300);
+
   inputList.forEach((inputElement) => {
-    inputElement.addEventListener('input', () => {
+    // Мгновенная валидация для некоторых событий
+    inputElement.addEventListener('blur', () => {
       checkInputValidity(formElement, inputElement, validationConfig);
       toggleButtonState(inputList, buttonElement, validationConfig);
+    });
+
+    // Дебаунсированная валидация для ввода
+    inputElement.addEventListener('input', () => {
+      // Для пустых полей - мгновенная валидация
+      if (inputElement.value.trim() === '') {
+        checkInputValidity(formElement, inputElement, validationConfig);
+        toggleButtonState(inputList, buttonElement, validationConfig);
+      } else {
+        // Для заполненных полей - дебаунсированная валидация
+        debouncedValidation(inputElement);
+      }
     });
   });
 }

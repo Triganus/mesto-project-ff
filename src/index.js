@@ -2,6 +2,8 @@ import './pages/index.css';
 import { createCard, handleDeleteCard, handleLikeClick } from './components/card.js';
 import { openModal, closeModal, setEventListeners } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
+import { loadingManager } from './components/loadingAnimation.js';
+import { domCache } from './components/debounce.js';
 import { 
   getUserInfo, 
   getInitialCards, 
@@ -26,21 +28,21 @@ const validationConfig = {
 let currentUser = null;
 let cardToDelete = null;
 
-// DOM элементы
-const placesList = document.querySelector('.places__list');
-const profileEditButton = document.querySelector('.profile__edit-button');
-const addCardButton = document.querySelector('.profile__add-button');
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-const profileImage = document.querySelector('[data-avatar]');
-const avatarButton = document.querySelector('.profile__avatar-button');
+// DOM элементы с кэшированием
+const placesList = domCache.get('.places__list');
+const profileEditButton = domCache.get('.profile__edit-button');
+const addCardButton = domCache.get('.profile__add-button');
+const profileTitle = domCache.get('.profile__title');
+const profileDescription = domCache.get('.profile__description');
+const profileImage = domCache.get('[data-avatar]');
+const avatarButton = domCache.get('.profile__avatar-button');
 
 // Попапы
-const editProfilePopup = document.querySelector('.popup_type_edit');
-const addCardPopup = document.querySelector('.popup_type_new-card');
-const imagePopup = document.querySelector('.popup_type_image');
-const avatarPopup = document.querySelector('.popup_type_avatar');
-const deletePopup = document.querySelector('.popup_type_delete');
+const editProfilePopup = domCache.get('.popup_type_edit');
+const addCardPopup = domCache.get('.popup_type_new-card');
+const imagePopup = domCache.get('.popup_type_image');
+const avatarPopup = domCache.get('.popup_type_avatar');
+const deletePopup = domCache.get('.popup_type_delete');
 
 // Формы и поля
 const editProfileForm = editProfilePopup.querySelector('.popup__form');
@@ -60,12 +62,12 @@ const deleteForm = deletePopup.querySelector('.popup__form');
 const popupImage = imagePopup.querySelector('.popup__image');
 const popupCaption = imagePopup.querySelector('.popup__caption');
 
-// Функция изменения текста кнопки во время загрузки
+// Функция изменения текста кнопки во время загрузки (обновленная)
 function renderLoading(button, isLoading, loadingText = 'Сохранение...', defaultText = 'Сохранить') {
   if (isLoading) {
-    button.textContent = loadingText;
+    loadingManager.showButtonLoading(button, loadingText);
   } else {
-    button.textContent = defaultText;
+    loadingManager.hideButtonLoading(button);
   }
 }
 
@@ -77,7 +79,7 @@ function handleCardClick(cardData) {
   openModal(imagePopup);
 }
 
-// Функция добавления карточки на страницу
+// Функция добавления карточки на страницу с анимацией
 function addCard(cardData, prepend = false) {
   const cardElement = createCard(
     cardData,
@@ -85,6 +87,9 @@ function addCard(cardData, prepend = false) {
     handleDeleteCardClick,
     handleCardClick
   );
+  
+  // Добавляем анимацию появления
+  cardElement.style.animationDelay = prepend ? '0s' : `${Math.random() * 0.3}s`;
   
   if (prepend) {
     placesList.prepend(cardElement);
@@ -98,8 +103,6 @@ function handleDeleteCardClick(cardElement, cardId) {
   cardToDelete = { element: cardElement, id: cardId };
   openModal(deletePopup);
 }
-
-
 
 // Обработчик отправки формы редактирования профиля
 function handleProfileFormSubmit(evt) {
@@ -224,7 +227,9 @@ setEventListeners(deletePopup);
 // Включение валидации
 enableValidation(validationConfig);
 
-// Инициализация приложения
+// Инициализация приложения с индикатором загрузки
+loadingManager.showGlobalLoading();
+
 Promise.all([getUserInfo(), getInitialCards()])
   .then(([userData, cardsData]) => {
     currentUser = userData;
@@ -234,13 +239,21 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileDescription.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
     
-    // Добавляем карточки
-    cardsData.forEach((cardData) => {
-      addCard(cardData);
+    // Добавляем карточки с задержкой для плавной анимации
+    cardsData.forEach((cardData, index) => {
+      setTimeout(() => {
+        addCard(cardData);
+      }, index * 100); // Задержка 100мс между карточками
     });
   })
   .catch((err) => {
     console.error(err);
+  })
+  .finally(() => {
+    // Скрываем индикатор загрузки
+    setTimeout(() => {
+      loadingManager.hideGlobalLoading();
+    }, 500);
   });
 
 // Установка изображений

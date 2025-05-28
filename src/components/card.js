@@ -1,19 +1,34 @@
 import { likeCard, unlikeCard } from './api.js';
+import { lazyLoader } from './lazyLoading.js';
 
 // Обработчик лайка карточки
 function handleLikeClick(cardId, likeButton, likeCount) {
   const isLiked = likeButton.classList.contains('card__like-button_active');
   const likeMethod = isLiked ? unlikeCard : likeCard;
   
+  // Добавляем анимацию клика
+  likeButton.style.pointerEvents = 'none';
+  
   likeMethod(cardId)
     .then((updatedCard) => {
       likeButton.classList.toggle('card__like-button_active');
       if (likeCount) {
         likeCount.textContent = updatedCard.likes.length;
+        // Анимация изменения счетчика
+        likeCount.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+          likeCount.style.transform = 'scale(1)';
+        }, 200);
       }
     })
     .catch((err) => {
       console.error(err);
+    })
+    .finally(() => {
+      // Восстанавливаем возможность клика
+      setTimeout(() => {
+        likeButton.style.pointerEvents = 'auto';
+      }, 300);
     });
 }
 
@@ -30,14 +45,20 @@ function createCard(cardData, currentUserId, handleDeleteCard, handleCardClick) 
   const likeButton = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
 
-  // Устанавливаем значения
-  cardImage.src = cardData.link;
+  // Настраиваем ленивую загрузку изображения
+  cardImage.dataset.src = cardData.link;
   cardImage.alt = cardData.name;
+  cardImage.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ii8+PC9zdmc+'; // Прозрачный placeholder
+  
+  // Запускаем ленивую загрузку
+  lazyLoader.observe(cardImage);
+  
   cardTitle.textContent = cardData.name;
   
-  // Устанавливаем количество лайков
+  // Устанавливаем количество лайков с анимацией
   if (likeCount) {
     likeCount.textContent = cardData.likes.length;
+    likeCount.style.transition = 'transform 0.2s ease';
   }
   
   // Проверяем, лайкнул ли текущий пользователь карточку
@@ -58,12 +79,24 @@ function createCard(cardData, currentUserId, handleDeleteCard, handleCardClick) 
   });
   cardImage.addEventListener('click', () => handleCardClick(cardData));
 
+  // Добавляем задержку для анимации появления карточки
+  setTimeout(() => {
+    cardElement.style.animationDelay = '0s';
+  }, 100);
+
   return cardElement;
 }
 
-// Функция удаления карточки
+// Функция удаления карточки с анимацией
 function handleDeleteCard(cardElement, cardId) {
-  cardElement.remove();
+  // Добавляем анимацию удаления
+  cardElement.style.transform = 'scale(0.8)';
+  cardElement.style.opacity = '0';
+  cardElement.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+  
+  setTimeout(() => {
+    cardElement.remove();
+  }, 300);
 }
 
 export { createCard, handleDeleteCard, handleLikeClick }; 

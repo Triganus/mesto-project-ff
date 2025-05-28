@@ -8,13 +8,21 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -ms-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
 .card__like-button:hover {
   opacity: 0.6;
+  transform: scale(1.1);
+}
+
+.card__like-button:active {
+  transform: scale(0.9);
+  animation: likeClick 0.3s ease;
+}
+
+@keyframes likeClick {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }

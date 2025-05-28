@@ -7,17 +7,19 @@
   -moz-border-radius: 2px;
   border-radius: 2px;
   border: 2px solid #fff;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -ms-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+  transition: opacity 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
   cursor: pointer;
   margin-left: auto;
 }
 
 .profile__add-button:hover {
   opacity: 0.6;
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.profile__add-button:active {
+  transform: scale(0.95);
 }
 
 @media screen and (max-width: 740px) {

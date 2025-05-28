@@ -7,6 +7,14 @@
   position: relative;
   box-sizing: border-box;
   padding: 34px 36px;
+  transform: scale(0.8) translateY(-20px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.popup_is-opened .popup__content {
+  transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
 @media screen and (max-width: 568px) {

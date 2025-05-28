@@ -7,17 +7,19 @@
   grid-area: button;
   align-self: center;
   cursor: pointer;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -ms-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+  transition: opacity 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
   padding: 0;
   margin: 0;
 }
 
 .profile__edit-button:hover {
   opacity: 0.6;
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.profile__edit-button:active {
+  transform: scale(0.9);
 }
 
 @media screen and (max-width: 480px) {
